@@ -1,0 +1,137 @@
+/* Full-screen flexbox layout */
+.login-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f9f9f9;
+  }
+  
+  /* Left side - Full Image */
+ 
+  
+  
+  /* Right side */
+  .login-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Login Card */
+  .login-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+    width: 380px;
+    text-align: center;
+  }
+  
+  .login-card h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .login-card p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 20px;
+  }
+  
+  /* Input Fields */
+  .input-group {
+    margin-bottom: 15px;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+  
+  /* Options - Remember Me & Forgot Password */
+  .options {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: #777;
+  }
+  
+  .options a {
+    text-decoration: none;
+    color: #6c5ce7;
+  }
+  
+  .options input {
+    margin-right: 5px;
+  }
+  
+  /* Login Button */
+  button {
+    width: 100%;
+    padding: 12px;
+    background-color: #6c5ce7;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+  }
+  
+  button:hover {
+    background-color: #4b4bcf;
+  }
+  
+  /* Create Account */
+  .create-account {
+    margin-top: 15px;
+    font-size: 14px;
+  }
+  
+  .create-account a {
+    color: #6c5ce7;
+    text-decoration: none;
+  }
+  
+  /* Social Media Icons */
+  .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+  }
+  
+  .icon {
+    font-size: 22px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .facebook {
+    color: #3b5998;
+  }
+  
+  .twitter {
+    color: #1da1f2;
+  }
+  
+  .github {
+    color: #333;
+  }
+  
+  .google {
+    color: #db4437;
+  }
+  
+  .icon:hover {
+    opacity: 0.7;
+  }
+  
+  
+  
+  
