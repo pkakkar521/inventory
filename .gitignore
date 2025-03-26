@@ -1,0 +1,11 @@
+# Node.js (React)
+node_modules/
+build/
+
+# Python (Flask)
+venv/
+__pycache__/
+instance/
+
+# Environment files
+.env
