@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 import "./Inventory.css";
+import { Card, Container, Row, Col } from "react-bootstrap";
 
 const Inventory = ({ apiUrl }) => {
   const navigate = useNavigate();
@@ -24,37 +25,56 @@ const Inventory = ({ apiUrl }) => {
 
   return (
     <div className="dashboard-container">
-      <Sidebar />
-      <div className="content">
-        <h2>Inventory Dashboard</h2>
+  <Sidebar />
+  <div className="content">
+    <h2>Inventory Dashboard</h2>
 
-        {/* Navigation Buttons */}
-        <div className="button-group mb-4"> {/* Added margin for spacing */}
-          <button className="btn btn-success me-2" onClick={() => navigate("/add-item", { state: { apiUrl } })}>
-            Add Inventory
-          </button>
-          <button className="btn btn-warning me-2" onClick={() => navigate("/edit-item", { state: { apiUrl } })}>
-            Edit Inventory
-          </button>
-          <button className="btn btn-danger" onClick={() => navigate("/delete-item", { state: { apiUrl } })}>
-            Delete Inventory
-          </button>
+    {/* Navigation Buttons */}
+    <div className="button-group">
+      <button className="btn btn-success" onClick={() => navigate("/add-item", { state: { apiUrl } })}>
+        Add Inventory
+      </button>
+      <button className="btn btn-warning" onClick={() => navigate("/edit-item", { state: { apiUrl } })}>
+        Edit Inventory
+      </button>
+      <button className="btn btn-danger" onClick={() => navigate("/delete-item", { state: { apiUrl } })}>
+        Delete Inventory
+      </button>
+    </div>
+
+    {/* Bill Summary Section */}
+    <div className="bill-summary">
+      <h3>Bill Summary</h3>
+      <div className="card-container">
+        <div className="card">
+          <h4>Total Items</h4>
+          <p>{items.length}</p>
         </div>
-
-        {/* Bill Summary BELOW Buttons */}
-        <h3>Bill Summary</h3>
-        <div className="card-container">
-          <div className="card">
-            <h4>Total Items</h4>
-            <p>{items.length}</p>
-          </div>
-          <div className="card">
-            <h4>Total Value</h4>
-            <p>${totalValue.toFixed(2)}</p>
-          </div>
+        <div className="card">
+          <h4>Total Value</h4>
+          <p>${totalValue.toFixed(2)}</p>
         </div>
       </div>
     </div>
+
+    {/* ✅ Move Inventory Title and Grid Inside .content */}
+    <h3 className="inventory-title">Inventory Items</h3>
+    <div className="inventory-grid">
+      {items.length > 0 ? (
+        items.map((item, index) => (
+          <div key={index} className="card inventory-card">
+            <h4>{item.name}</h4>
+            <p>💰 ${item.price} | 🏷 {item.quantity} pcs</p>
+            <p>📅 Expiry: {new Date(item.expiry_date).toDateString()}</p>
+          </div>
+        ))
+      ) : (
+        <p className="no-items">No items in inventory.</p>
+      )}
+    </div>
+  </div>
+</div>
+
   );
 };
 

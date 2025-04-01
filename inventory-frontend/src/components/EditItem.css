@@ -1,0 +1,59 @@
+/* Blur effect on background when modal is open */
+.blur-background > *:not(.edit-modal) { 
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+    pointer-events: none;
+  }
+  
+  /* Modal Overlay (Centers the Card & Adds Blur Effect) */
+  .edit-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+    -webkit-backdrop-filter: blur(10px); /* Safari 9+, iOS Safari */
+    backdrop-filter: blur(10px); /* Standard property */
+    z-index: 1000;
+  }
+  
+  /* Enlarged Edit Card (No Blur) */
+  .edit-card {
+    background: rgba(255, 255, 255, 0.95); /* Higher opacity for better visibility */
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+    width: 400px; /* Make it bigger */
+    text-align: center;
+    transform: scale(1.1); /* Slight enlargement */
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Input Fields */
+  .edit-card input {
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.8); /* Transparent white */
+  }
+  
+  /* Buttons */
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  .modal-buttons .btn {
+    width: 48%;
+    font-size: 16px;
+  }
+  
+  
+  
