@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "./Sidebar";
-import { Modal, Button, Form, Container, Row, Col } from "react-bootstrap";
+import { Modal, Button, Form, Container, Row, Col,Offcanvas  } from "react-bootstrap";
 import "./EditItem.css"; // Ensure to create/Edit CSS
 import "./AddItem.css";
 
@@ -11,7 +11,15 @@ export const AddItem = () => {
   const location = useLocation();
   const apiUrl = location.state?.apiUrl || ""; // Get apiUrl from navigation
 
-  const [newItem, setNewItem] = useState({ name: "", price: "", quantity: "", start_date: "", expiry_date: "" });
+  const getCurrentDate = () => new Date().toISOString().split("T")[0]; // Get current date in YYYY-MM-DD format
+
+  const [newItem, setNewItem] = useState({ 
+    name: "", 
+    price: "", 
+    quantity: "", 
+    start_date: getCurrentDate(), // Set default to today's date
+    expiry_date: "" 
+  });
 
   const handleChange = (e) => setNewItem({ ...newItem, [e.target.name]: e.target.value });
 
@@ -36,11 +44,26 @@ export const AddItem = () => {
         <div className="card add-item-card">
           <h2>Add Item</h2>
           <div className="add-item-form">
-            <input type="text" name="name" placeholder="Item Name" value={newItem.name} onChange={handleChange} className="form-control" />
-            <input type="number" name="price" placeholder="Price" value={newItem.price} onChange={handleChange} className="form-control" />
-            <input type="number" name="quantity" placeholder="Quantity" value={newItem.quantity} onChange={handleChange} className="form-control" />
-            <input type="date" name="start_date" placeholder="Start Date" value={newItem.start_date} onChange={handleChange} className="form-control" />
-            <input type="date" name="expiry_date" placeholder="Expiry Date" value={newItem.expiry_date} onChange={handleChange} className="form-control" />
+            <div className="form-group">
+              <label>Item Name:</label>
+              <input type="text" name="name" value={newItem.name} onChange={handleChange} className="form-control" />
+            </div>
+            <div className="form-group">
+              <label>Price:</label>
+              <input type="number" name="price" value={newItem.price} onChange={handleChange} className="form-control" />
+            </div>
+            <div className="form-group">
+              <label>Quantity:</label>
+              <input type="number" name="quantity" value={newItem.quantity} onChange={handleChange} className="form-control" />
+            </div>
+            <div className="form-group">
+              <label>Start Date:</label>
+              <input type="date" name="start_date" value={newItem.start_date} onChange={handleChange} className="form-control" />
+            </div>
+            <div className="form-group">
+              <label>Expiry Date:</label>
+              <input type="date" name="expiry_date" value={newItem.expiry_date} onChange={handleChange} className="form-control" />
+            </div>
             <button className="btn btn-success" onClick={addItem}>Add Item</button>
           </div>
         </div>
@@ -48,6 +71,8 @@ export const AddItem = () => {
     </div>
   );
 };
+
+
 
 export const EditItem = () => {
   const navigate = useNavigate();
@@ -71,6 +96,7 @@ export const EditItem = () => {
       .catch((error) => console.error("Error fetching items:", error));
   }, [apiUrl]);
 
+  // Handle input changes
   const handleChange = (e) => {
     setUpdatedItem({ ...updatedItem, [e.target.name]: e.target.value });
   };
@@ -86,12 +112,38 @@ export const EditItem = () => {
     setEditingItem(null);
   };
 
+  // Delete item if quantity is 0
+  const deleteItem = async (itemName) => {
+    try {
+      await axios.delete(`${apiUrl}/${itemName}`);
+
+      // Fetch updated inventory after deletion
+      const response = await axios.get(apiUrl);
+      setItems(response.data);
+
+      setEditingItem(null);
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+
   // Update item
   const updateItem = async () => {
+    const newQuantity = parseInt(updatedItem.quantity, 10); // Convert quantity to number
+
+    if (newQuantity === 0) {
+      await deleteItem(editingItem.name); // Delete if quantity is 0
+      return;
+    }
+
     try {
       await axios.put(`${apiUrl}/${editingItem.name}`, updatedItem);
+
+      // Fetch updated inventory after update
+      const response = await axios.get(apiUrl);
+      setItems(response.data);
+
       setEditingItem(null);
-      navigate(-1); // Go back to inventory page
     } catch (error) {
       console.error("Error updating item:", error);
     }
@@ -119,7 +171,7 @@ export const EditItem = () => {
             {items.map((item, index) => (
               <tr key={index}>
                 <td>{item.name}</td>
-                <td>${item.price}</td>
+                <td>{item.price}</td>
                 <td>{item.quantity}</td>
                 <td>{item.start_date}</td>
                 <td>{item.expiry_date}</td>
@@ -137,12 +189,29 @@ export const EditItem = () => {
         <div className="edit-modal">
           <div className="edit-card">
             <h3>Edit Item</h3>
-            <input type="text" name="name" value={updatedItem.name} className="form-control" disabled />
-            <input type="number" name="price" value={updatedItem.price} onChange={handleChange} className="form-control" />
-            <input type="number" name="quantity" value={updatedItem.quantity} onChange={handleChange} className="form-control" />
-            <input type="date" name="start_date" value={updatedItem.start_date} onChange={handleChange} className="form-control" />
-            <input type="date" name="expiry_date" value={updatedItem.expiry_date} onChange={handleChange} className="form-control" />
-            
+            <div className="edit-item-form">
+              <div className="form-group">
+                <label>Item Name:</label>
+                <input type="text" name="name" value={updatedItem.name} className="form-control" disabled />
+              </div>
+              <div className="form-group">
+                <label>Price:</label>
+                <input type="number" name="price" value={updatedItem.price} onChange={handleChange} className="form-control" />
+              </div>
+              <div className="form-group">
+                <label>Quantity:</label>
+                <input type="number" name="quantity" value={updatedItem.quantity} onChange={handleChange} className="form-control" />
+              </div>
+              <div className="form-group">
+                <label>Start Date:</label>
+                <input type="date" name="start_date" value={updatedItem.start_date} onChange={handleChange} className="form-control" />
+              </div>
+              <div className="form-group">
+                <label>Expiry Date:</label>
+                <input type="date" name="expiry_date" value={updatedItem.expiry_date} onChange={handleChange} className="form-control" />
+              </div>
+            </div>
+
             <div className="modal-buttons">
               <button className="btn btn-warning" onClick={updateItem}>Update Item</button>
               <button className="btn btn-secondary" onClick={closeModal}>Cancel</button>
@@ -154,127 +223,129 @@ export const EditItem = () => {
   );
 };
 
+
  
 
-  export const DeleteItem = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const apiUrl = location.state?.apiUrl || "";
+export const DeleteItem = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const apiUrl = location.state?.apiUrl || "";
 
-    const [items, setItems] = useState([]);
-    const [itemName, setItemName] = useState("");
-    const [quantity, setQuantity] = useState("");
-    const [showModal, setShowModal] = useState(false);
+  const [items, setItems] = useState([]);
+  const [itemName, setItemName] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [availableQuantity, setAvailableQuantity] = useState(0);
+  const [pricePerUnit, setPricePerUnit] = useState(0);
+  const [showSidebar, setShowSidebar] = useState(false);
 
-    useEffect(() => {
-        axios.get(apiUrl)
-            .then(response => setItems(response.data.sort((a, b) => new Date(a.expiry_date) - new Date(b.expiry_date))))
-            .catch(error => console.error("Error fetching items:", error));
-    }, [apiUrl]);
+  useEffect(() => {
+      axios.get(apiUrl)
+          .then(response => setItems(response.data.sort((a, b) => new Date(a.expiry_date) - new Date(b.expiry_date))))
+          .catch(error => console.error("Error fetching items:", error));
+  }, [apiUrl]);
 
-    const deleteItem = async () => {
-        if (!itemName || !quantity) {
-            alert("Please enter item name and quantity.");
-            return;
-        }
+  useEffect(() => {
+      if (itemName) {
+          const filteredItems = items.filter(item => item.name === itemName);
+          const totalQuantity = filteredItems.reduce((sum, item) => sum + item.quantity, 0);
+          setAvailableQuantity(totalQuantity);
+          setPricePerUnit(filteredItems.length > 0 ? filteredItems[0].price : 0);
+      } else {
+          setAvailableQuantity(0);
+          setPricePerUnit(0);
+      }
+  }, [itemName, items]);
 
-        const sortedItems = [...items]
-            .filter(item => item.name === itemName)
-            .sort((a, b) => new Date(b.expiry_date) - new Date(a.expiry_date));
+  const deleteItem = async () => {
+      if (!itemName || !quantity) {
+          alert("Please enter item name and quantity.");
+          return;
+      }
+      if (parseInt(quantity) > availableQuantity) {
+        alert("Out of Stock.");
+        return;
+    }
+      setShowSidebar(true);
+  };
 
-        let remainingQuantity = parseInt(quantity);
-        let updatedItems = [...items];
+  return (
+      <div className="dashboard-container">
+          <Sidebar />
+          <Container className="d-flex justify-content-center align-items-center vh-100">
+              <div className="card p-4 shadow-sm" style={{ width: "400px" }}>
+                  <h3 className="text-center mb-4">Sale Item</h3>
+                  
+                  <Form>
+                      <Form.Group className="mb-3">
+                          <Row>
+                              <Col xs={4} className="d-flex align-items-center">
+                                  <Form.Label className="mb-0">Item Name</Form.Label>
+                              </Col>
+                              <Col xs={8}>
+                                  <Form.Select value={itemName} onChange={(e) => setItemName(e.target.value)}>
+                                      <option value="">Select an item</option>
+                                      {items.map((item, index) => (
+                                          <option key={index} value={item.name}>{item.name}</option>
+                                      ))}
+                                  </Form.Select>
+                              </Col>
+                          </Row>
+                      </Form.Group>
 
-        try {
-            for (let item of sortedItems) {
-                if (remainingQuantity <= 0) break;
+                      <Form.Group className="mb-3">
+                          <Row>
+                              <Col xs={4} className="d-flex align-items-center">
+                                  <Form.Label className="mb-0">Total Quantity</Form.Label>
+                              </Col>
+                              <Col xs={8}>
+                                  <Form.Control type="text" value={availableQuantity} disabled />
+                              </Col>
+                          </Row>
+                      </Form.Group>
 
-                if (item.quantity > remainingQuantity) {
-                    await axios.put(`${apiUrl}/${item.name}`, { quantity: item.quantity - remainingQuantity });
-                    updatedItems = updatedItems.map(i =>
-                        i.name === item.name && i.expiry_date === item.expiry_date
-                            ? { ...i, quantity: i.quantity - remainingQuantity }
-                            : i);
-                    remainingQuantity = 0;
-                } else {
-                    await axios.delete(`${apiUrl}/${item.name}`);
-                    updatedItems = updatedItems.filter(i => !(i.name === item.name && i.expiry_date === item.expiry_date));
-                    remainingQuantity -= item.quantity;
-                }
-            }
-            setItems(updatedItems);
-            setShowModal(false);
-            navigate(-1);
-        } catch (error) {
-            console.error("Error deleting item:", error);
-        }
-    };
+                      <Form.Group className="mb-3">
+                          <Row>
+                              <Col xs={4} className="d-flex align-items-center">
+                                  <Form.Label className="mb-0">Quantity To Add</Form.Label>
+                              </Col>
+                              <Col xs={8}>
+                                  <Form.Control
+                                      type="number"
+                                      placeholder="Enter quantity"
+                                      value={quantity}
+                                      onChange={(e) => setQuantity(e.target.value)}
+                                      min="1"
+                                  />
+                              </Col>
+                          </Row>
+                      </Form.Group>
 
-    return (
-        <div className="dashboard-container">
-            <Sidebar />
-            <Container className="d-flex justify-content-center align-items-center vh-100">
-                <div className="card p-4 shadow-sm" style={{ width: "400px" }}>
-                    <h3 className="text-center mb-4">Delete Item</h3>
-                    
-                    <Form>
-                        <Form.Group className="mb-3">
-                            <Row>
-                                <Col xs={4} className="d-flex align-items-center">
-                                    <Form.Label className="mb-0">Item Name</Form.Label>
-                                </Col>
-                                <Col xs={8}>
-                                    <Form.Select value={itemName} onChange={(e) => setItemName(e.target.value)}>
-                                        <option value="">Select an item</option>
-                                        {items.map((item, index) => (
-                                            <option key={index} value={item.name}>{item.name}</option>
-                                        ))}
-                                    </Form.Select>
-                                </Col>
-                            </Row>
-                        </Form.Group>
+                      <div className="d-flex justify-content-center">
+                          <Button variant="danger" onClick={deleteItem}>
+                              Add To cart
+                          </Button>
+                      </div>
+                  </Form>
+              </div>
+          </Container>
 
-                        <Form.Group className="mb-3">
-                            <Row>
-                                <Col xs={4} className="d-flex align-items-center">
-                                    <Form.Label className="mb-0">Quantity</Form.Label>
-                                </Col>
-                                <Col xs={8}>
-                                    <Form.Control
-                                        type="number"
-                                        placeholder="Enter quantity"
-                                        value={quantity}
-                                        onChange={(e) => setQuantity(e.target.value)}
-                                        min="1"
-                                    />
-                                </Col>
-                            </Row>
-                        </Form.Group>
-
-                        <div className="d-flex justify-content-center">
-                            <Button variant="danger" onClick={() => setShowModal(true)}>
-                                Delete
-                            </Button>
-                        </div>
-                    </Form>
-                </div>
-            </Container>
-
-            {/* Confirmation Modal */}
-            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Confirm Deletion</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    Are you sure you want to delete <strong>{quantity}</strong> units of <strong>{itemName}</strong>?
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
-                    <Button variant="danger" onClick={deleteItem}>Confirm</Button>
-                </Modal.Footer>
-            </Modal>
-        </div>
-    );
+          {/* Sidebar for Order Summary */}
+          <Offcanvas show={showSidebar} onHide={() => setShowSidebar(false)} placement="end">
+              <Offcanvas.Header closeButton>
+                  <Offcanvas.Title>Order Summary</Offcanvas.Title>
+              </Offcanvas.Header>
+              <Offcanvas.Body>
+                  <p><strong>Item:</strong> {itemName}</p>
+                  <p><strong>Quantity:</strong> {quantity}</p>
+                  <p><strong>Price per unit:</strong> ₹{pricePerUnit}</p>
+                  <p><strong>Total Price:</strong> ₹{(quantity * pricePerUnit).toFixed(2)}</p>
+                  <Button variant="success" className="w-100" onClick={() => { setShowSidebar(false); navigate(-1); }}>
+                      Proceed to Pay
+                  </Button>
+              </Offcanvas.Body>
+          </Offcanvas>
+      </div>
+  );
 };
 
 

@@ -32,34 +32,15 @@ def add_item_user1():
 
 @user1_routes.route("/items/<string:name>", methods=["DELETE"])
 def delete_item_user1(name):
-    data = request.json
-    quantity_to_delete = int(data.get("quantity", 0))
-
-    if quantity_to_delete <= 0:
-        return jsonify({"message": "Invalid quantity"}), 400
-
-    items = list(collection1.find({"name": name}).sort("expiry_date", 1))
-
-    if not items:
+    item = collection1.find_one({"name": name})
+    
+    if not item:
         return jsonify({"message": "Item not found"}), 404
 
-    remaining_quantity = quantity_to_delete
+    collection1.delete_many({"name": name})  # Delete all matching items
 
-    for item in items:
-        if remaining_quantity == 0:
-            break
+    return jsonify({"message": "Item deleted successfully!"}), 200
 
-        if item["quantity"] > remaining_quantity:
-            collection1.update_one(
-                {"_id": item["_id"]}, 
-                {"$inc": {"quantity": -remaining_quantity}}
-            )
-            remaining_quantity = 0
-        else:
-            collection1.delete_one({"_id": item["_id"]})
-            remaining_quantity -= item["quantity"]
-
-    return jsonify({"message": "Item updated successfully!"}), 200
 
 
 # 🔹 Update Item - User1
@@ -88,37 +69,16 @@ def add_item_user2():
 
 # 🔹 Delete Item - User2
 
-
 @user2_routes.route("/items/<string:name>", methods=["DELETE"])
 def delete_item_user2(name):
-    data = request.json
-    quantity_to_delete = int(data.get("quantity", 0))
-
-    if quantity_to_delete <= 0:
-        return jsonify({"message": "Invalid quantity"}), 400
-
-    items = list(collection1.find({"name": name}).sort("expiry_date", 1))
-
-    if not items:
+    item = collection1.find_one({"name": name})
+    
+    if not item:
         return jsonify({"message": "Item not found"}), 404
 
-    remaining_quantity = quantity_to_delete
+    collection1.delete_many({"name": name})  # Delete all matching items
 
-    for item in items:
-        if remaining_quantity == 0:
-            break
-
-        if item["quantity"] > remaining_quantity:
-            collection1.update_one(
-                {"_id": item["_id"]}, 
-                {"$inc": {"quantity": -remaining_quantity}}
-            )
-            remaining_quantity = 0
-        else:
-            collection1.delete_one({"_id": item["_id"]})
-            remaining_quantity -= item["quantity"]
-
-    return jsonify({"message": "Item updated successfully!"}), 200
+    return jsonify({"message": "Item deleted successfully!"}), 200
 
 
 # 🔹 Update Item - User2

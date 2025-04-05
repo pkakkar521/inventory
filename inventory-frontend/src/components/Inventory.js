@@ -38,7 +38,7 @@ const Inventory = ({ apiUrl }) => {
         Edit Inventory
       </button>
       <button className="btn btn-danger" onClick={() => navigate("/delete-item", { state: { apiUrl } })}>
-        Delete Inventory
+        Cart Inventory
       </button>
     </div>
 
@@ -52,26 +52,39 @@ const Inventory = ({ apiUrl }) => {
         </div>
         <div className="card">
           <h4>Total Value</h4>
-          <p>${totalValue.toFixed(2)}</p>
+          <p>₹{totalValue.toFixed(2)}</p>
         </div>
       </div>
     </div>
 
     {/* ✅ Move Inventory Title and Grid Inside .content */}
     <h3 className="inventory-title">Inventory Items</h3>
-    <div className="inventory-grid">
-      {items.length > 0 ? (
-        items.map((item, index) => (
-          <div key={index} className="card inventory-card">
-            <h4>{item.name}</h4>
-            <p>💰 ${item.price} | 🏷 {item.quantity} pcs</p>
-            <p>📅 Expiry: {new Date(item.expiry_date).toDateString()}</p>
-          </div>
-        ))
-      ) : (
-        <p className="no-items">No items in inventory.</p>
-      )}
-    </div>
+<div className="inventory-table-container">
+  {items.length > 0 ? (
+    <table className="table table-bordered table-hover">
+      <thead className="table-dark">
+        <tr>
+          <th>Name</th>
+          <th>Price (₹)</th>
+          <th>Quantity</th>
+          <th>Expiry Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {items.map((item, index) => (
+          <tr key={index}>
+            <td>{item.name}</td>
+            <td>₹{item.price}</td>
+            <td>{item.quantity} pcs</td>
+            <td>{new Date(item.expiry_date).toDateString()}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  ) : (
+    <p className="no-items">No items in inventory.</p>
+  )}
+</div>
   </div>
 </div>
 
