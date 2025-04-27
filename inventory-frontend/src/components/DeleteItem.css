@@ -1,0 +1,156 @@
+.delete-item-page {
+  background: linear-gradient(135deg, #f2f4f7, #e9eff1);
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  display: flex;
+}
+
+.delete-item-page .content {
+  flex: 1;
+  padding: 2.5rem;
+}
+
+.delete-item-page .page-title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2.5rem;
+}
+
+.delete-item-page .top-search-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.delete-item-page .search-label {
+  font-weight: 600;
+  margin-right: 0.5rem;
+  font-size: 16px;
+}
+
+.delete-item-page .search-input-wrapper {
+  position: relative;
+  width: 320px;
+}
+
+.delete-item-page .suggestion-box {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  z-index: 1000;
+  max-height: 150px;
+  overflow-y: auto;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.delete-item-page .suggestion-item {
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.delete-item-page .suggestion-item:hover {
+  background-color: #f0f0f0;
+}
+
+.delete-item-page .form-flex-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.delete-item-page .column-box {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  width: 320px;
+  transition: transform 0.3s ease;
+}
+
+.delete-item-page .column-box:hover {
+  transform: translateY(-5px);
+}
+
+.delete-item-page .column-box label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.delete-item-page .column-box input {
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+}
+
+.delete-item-page .cart-section {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.delete-item-page .cart-section h4 {
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+.delete-item-page .discount-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.delete-item-page .discount-control button {
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.delete-item-page .discount-control button:focus {
+  outline: none;
+}
+
+.delete-item-page .discount-control .discount-text {
+  font-size: 16px;
+  font-weight: 500;
+}
+/* Discount Row Styling */
+.delete-item-page .discount-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: green;
+}
+
+.delete-item-page .discount-row .label {
+  min-width: 120px;
+}
+
+.delete-item-page .discount-row .amount {
+  font-weight: 600;
+}
+
+.delete-item-page .discount-control-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
