@@ -2,3 +2,4 @@ pyjwt
 flask
 flask-cors
 gunicorn
+pymongo
