@@ -1,6 +1,6 @@
 # Node.js (React)
 node_modules/
-build/
+
 
 # Python (Flask)
 venv/
