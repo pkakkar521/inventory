@@ -17,10 +17,14 @@ app.register_blueprint(user2_routes, url_prefix="/user2")
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve_react_app(path):
-    return send_from_directory(app.template_folder, "index.html")
+    if path != "" and os.path.exists(os.path.join(app.template_folder, path)):
+        return send_from_directory(app.template_folder, path)
+    else:
+        return send_from_directory(app.template_folder, "index.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
